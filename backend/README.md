@@ -1,0 +1,1 @@
+[Flask](https://github.com/pallets/flask) based search/explore page `json` data feeder and miner generated `.csv` file container(for > 1MB files, pls put it on [dropbox](https://www.dropbox.com/sh/v605veaawb4ngey/AABRGVeoLXk41xP009oeVqzPa?dl=0) etc.).
