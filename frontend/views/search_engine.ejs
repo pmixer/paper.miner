@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+<ul class="nav nav-pills nav-fill" style="margin-left: 320px; margin-right: 600px">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/search">Search</a>
+      </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/trends">Trends</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Explore</a>
+    </li>
+    
+</ul>
+
+<br>
+
+
+<div class="input-group mb-3">
+  <h1>PaperMiner</h1>
+  <input type="text" style="margin-left: 20px; height: 58px" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
+  <div class="input-group-append" style="margin-right: 130px">
+    <button class="btn btn-outline-secondary" type="button" id="button-addon2">search</button>
+    
+  </div>
+  <label style="font-size: 26px; padding-top: 7px">Limit:</label>
+  <div class="input-group-append" style="margin-left: 8px; margin-right: 100px">
+      <select class="bootstrap-select">
+          <option value="10" selected="selected">10 pages</option>
+          <option value="20">20 pages</option>
+          <option value="50">50 pages</option>
+          <option value="100">100 pages</option>
+        </select>
+  </div>
+</div>
+<br>
+<br>
+<div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h3 class="mb-3" style="color:rgb(67, 126, 236)">Second-Order Guarantees in Centralized, Federated and Decentralized Nonconvex Optimization</h3>
+      <small class="text-muted">31 March, 2020</small>
+    </div>
+    
+    <p class="mb-2" style="font-size: 22px; font-style: italic">Stefan Vlaski</p>
+    <p class="mb-2" style="font-size: 22px">Rapid advances in data collection and processing capabilities have allowed for the use of increasingly complex models that give rise to nonconvex optimization problems. These formulations, however, can be arbitrarily difficult to solve in general, in the sense that even simply verifying that a given point is a local minimum can be NP-hard [1]</p>
+  </a>
+  <a href="#" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h3 class="mb-3" style="color:rgb(67, 126, 236)">Deep reinforcement learning for large-scale epidemic control</h3>
+        <small class="text-muted">30 March, 2020</small>
+      </div>
+      
+      <p class="mb-2" style="font-size: 22px; font-style: italic">Pieter Libin</p>
+      <p class="mb-2" style="font-size: 22px">Secondly, we set up a ground truth such that we can evaluate the performance of the 'Proximal Policy Optimization' algorithm to learn in a single district of this epidemiological model. Finally, we consider a large-scale problem, by conducting an experiment where we aim to learn a joint policy to control the districts in a community of 11 tightly coupled districts, for which no ground truth can be established</p>
+  </a>
+  <a href="#" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h3 class="mb-3" style="color:rgb(67, 126, 236)">On Coordination of Smart Grid and Cooperative Cloud Providers</h3>
+        <small class="text-muted">30 March, 2020</small>
+      </div>
+      
+      <p class="mb-2" style="font-size: 22px; font-style: italic">Monireh Mohebbi Moghaddam</p>
+      <p class="mb-2" style="font-size: 22px">Given the dynamic of cloud providers in the federation formation process, an optimization model based on a constrained Markov decision process (CMDP) has been used by the smart grid to achieve the optimal policy. Numerical results show that the proposed solution yields around 28% and 29% profit improvement on average for the smart grid, and the cloud providers, respectively, compared to the noncooperative scheme</p>
+  </a>
+  <a href="#" class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h3 class="mb-3" style="color:rgb(67, 126, 236)">Revisiting "Over-smoothing" in Deep GCNs</h3>
+        <small class="text-muted">30 March, 2020</small>
+      </div>
+      
+      <p class="mb-2" style="font-size: 22px; font-style: italic">Chaoqi Yang</p>
+      <p class="mb-2" style="font-size: 22px">This work interprets GCNs and SGCs as two-step optimization problems and provides the reason why deep SGC suffers from oversmoothing but deep GCNs do not. The experiments show that (i) in GCN, overfitting leads to the performance drop and oversmoothing does not exist even model goes to very deep (100 layers); (ii) mean-subtraction speeds up the model convergence as well as retains the same expressive power; (iii) the weight of neighbor averaging (1 is the common setting) does not significantly affect the model performance once it is above the threshold (> 0.5).</p>
+  </a>
+  
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

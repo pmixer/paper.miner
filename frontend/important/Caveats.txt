@@ -1,0 +1,6 @@
+1. 别忘了装nodemon
+npm install nodemon -g
+
+然后运行的时候， nodemon app.js
+
+

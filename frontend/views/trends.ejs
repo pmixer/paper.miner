@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+
+<ul class="nav nav-pills nav-fill" style="margin-left: 320px; margin-right: 600px">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/search">Search</a>
+      </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/trends">Trends</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Explore</a>
+    </li>
+    
+</ul>
+
+<br>
+
+<div id="plot1"></div>
+
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+
+<script type="text/javascript">
+    var parseTime = d3.timeParse("%Y");
+    var formatTime = d3.timeFormat("%Y");
+
+    d3.csv("neurips_pubnum_by_year.csv", function (d) {
+        return {
+            count: parseInt(d.id),
+            year: parseTime(d.year)
+        };
+
+    }).then(function (data) {
+        plot1(data);
+    });
+
+    function plot1(data) {
+        var margin = {top: 100, right: 650, bottom: 450, left: 480}
+        , width = window.innerWidth - margin.left - margin.right // Use the window's width 
+        , height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+
+        var startDate = d3.min(data, function(d) { return d.year; });
+        var endDate = d3.max(data, function(d) { return d.year; });
+
+        var xScale = d3.scaleTime()
+        .domain([
+            d3.timeDay.offset(startDate,-1),
+            d3.timeDay.offset(endDate,365)
+        ]) // input
+        .range([0, width]); // output
+
+
+        var yScale = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d){ return d.count })]) // input 
+        .range([height, 0]); // output 
+
+        var line = d3.line()
+        .x(function (d) {return xScale(d.year);})
+        .y(function (d) {return yScale(d.count);})
+        .curve(d3.curveMonotoneX)
+        
+        var svg = d3.select("#plot1").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+
+        svg.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+
+        svg.append("path")
+        .datum(data)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#FFC300")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot1")
+        .data(data)
+        .enter().append("circle")
+        .attr("fill", "#FFC300")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        //add titles
+        svg.append("text")
+            .text("Paper Statistics by Year")
+            .style("text-anchor", "middle")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "22px")
+            .attr("font-weight", "bold")
+            .attr("x", width / 2)
+            .attr("y", -20);
+
+        svg.append("text")
+            .text("Year")
+            .style("text-anchor", "middle")
+            .style("font-size", "16px")
+            .attr("transform", "translate(" + (width / 2) + "," + (height+60) + ")")
+
+        svg.append("text")
+            .text("Num of publications")
+            .style("text-anchor", "middle")
+            .style("font-size", "16px")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -220)
+            .attr("y", -80)
+    }
+
+</script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
