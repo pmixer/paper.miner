@@ -7,6 +7,10 @@ a {
   color: #00B7FF;
 }
 
+.logo {
+  color: black;
+}
+
 .axis line {
   fill: none;
   stroke: black;
