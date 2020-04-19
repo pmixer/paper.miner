@@ -50,7 +50,7 @@ for year in sorted(index_urls.keys()):
     for link in paper_links:
         # import pdb; pdb.set_trace()
         if "visual-sequence-learning-in-hierarchical-prediction-networks-and-primate-visual-cortex" in link['href']: continue
-        paper_title = link.contents[0]
+        paper_title = link.text # link.contents[0]
         info_link = base_url + link["href"]
         pdf_link = info_link + ".pdf"
         pdf_name = link["href"][7:] + ".pdf"
@@ -100,8 +100,17 @@ for year in sorted(index_urls.keys()):
                 continue
         if "visual-sequence-learning-in-hierarchical-prediction-networks-and-primate-visual-cortex" not in link:
             paper_text = text_from_pdf(pdf_path)
-            papers.append([paper_id, year, paper_title, event_type, pdf_name, abstract, paper_text])
+                
+            authors = "|".join([author[1] for author in authors])
+            try:
+                papers.append([paper_title.replace(" ", "_"), 'NIPS', year, authors, info_link, abstract, paper_text])
+            except:
+                import pdb; pdb.set_trace()
 
-pd.DataFrame(list(nips_authors), columns=["id","name"]).sort_values(by="id").to_csv("output/authors.csv", index=False)
-pd.DataFrame(papers, columns=["id", "year", "title", "event_type", "pdf_name", "abstract", "paper_text"]).sort_values(by="id").to_csv("output/papers.csv", index=False)
-pd.DataFrame(paper_authors, columns=["id", "paper_id", "author_id"]).sort_values(by="id").to_csv("output/paper_authors.csv", index=False)
+# pd.DataFrame(list(nips_authors), columns=["id","name"]).sort_values(by="id").to_csv("output/authors.csv", index=False)
+nips_papers_data = pd.DataFrame(papers, columns=["title", "venue", "year", "authors", "url", "abstract", "paper_text"])
+nips_papers_data.to_csv("output/nips.csv", index=False)
+nips_papers_data_without_paper_text = nips_papers_data.drop(columns=["paper_text"])
+nips_papers_data_without_paper_text.to_csv("output/nips_without_paper_text.csv", index=False)
+
+# pd.DataFrame(paper_authors, columns=["id", "paper_id", "author_id"]).sort_values(by="id").to_csv("output/paper_authors.csv", index=False)

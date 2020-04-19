@@ -1,7 +1,8 @@
 output/papers.csv:
 	mkdir -p output
 	python src/download_papers.py
-csv: output/nips.csv output/nips_without_paper_text.csv
+
+csv: output/jmlr.csv output/jmlr_without_paper_text.csv
 
 working/no_header/papers.csv: output/papers.csv
 	mkdir -p working/no_header
