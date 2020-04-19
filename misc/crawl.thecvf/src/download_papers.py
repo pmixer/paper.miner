@@ -32,6 +32,7 @@ papers = list()
 author_set = set()
 paper_authors = list()
 
+mc_links.append('ECCV2018.py')
 for cl in mc_links:
     cid = cl.split(".")[0] # conference id, i.e. CVPR2019 in CVPR2019.py
     index_url = base_url + cl

@@ -99,7 +99,7 @@ for li in ready_proceedings:
         except:
             print("Abstract not found %s" % paper_title.encode("ascii", "replace"))
             abstract = ""
-            blacklist.append([cid, paper_title])
+            blacklist.append([cid, year, paper_title])
             continue
         authors = paper_soup.findChild('div', attrs={"id": "authors"}).text.strip(" \n;").split(",")
         authors = [a.strip(" \n") for a in authors]
@@ -110,7 +110,7 @@ for li in ready_proceedings:
         with open(pdf_path, "rb") as f:
             if f.read(15)==b"<!DOCTYPE html>":
                 print(paper_title + "PDF MISSING")
-                blacklist.append([cid, paper_title])
+                blacklist.append([cid, year, paper_title])
                 continue
        
         # pdf2txt for extracting content from downloaded pdf files
