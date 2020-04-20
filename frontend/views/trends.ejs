@@ -35,10 +35,11 @@
     var parseTime = d3.timeParse("%Y");
     var formatTime = d3.timeFormat("%Y");
 
-    d3.csv("neurips_pubnum_by_year.csv", function (d) {
+    d3.csv("papers_public_num_by_year.csv", function (d) {
         return {
-            count: parseInt(d.id),
-            year: parseTime(d.year)
+            count: parseInt(d.publication_num),
+            year: parseTime(d.year),
+            venue: d.venue
         };
 
     }).then(function (data) {
@@ -66,9 +67,13 @@
         .range([height, 0]); // output 
 
         var line = d3.line()
-        .x(function (d) {return xScale(d.year);})
-        .y(function (d) {return yScale(d.count);})
+        .x(function (d) {return xScale(d.year)})
+        .y(function (d) {return yScale(d.count)})
         .curve(d3.curveMonotoneX)
+
+        
+
+
         
         var svg = d3.select("#plot1").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -85,8 +90,10 @@
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
+        //add lines
+        var ft1 = data.filter(function(d){return d.venue == "ACL"});
         svg.append("path")
-        .datum(data)
+        .datum(ft1)
         .attr("class","line")
         .attr("d",line)
         .attr ("fill", "none")
@@ -94,9 +101,204 @@
         .attr("stroke-width",2);
 
         svg.selectAll(".dot1")
-        .data(data)
+        .data(ft1)
         .enter().append("circle")
         .attr("fill", "#FFC300")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+
+        var ft2 = data.filter(function(d){return d.venue == "ACML"});
+        svg.append("path")
+        .datum(ft2)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#d63429")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft2)
+        .enter().append("circle")
+        .attr("fill", "#d63429")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft3 = data.filter(function(d){return d.venue == "AISTATS"});
+        svg.append("path")
+        .datum(ft3)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#499ee3")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft3)
+        .enter().append("circle")
+        .attr("fill", "#499ee3")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft4 = data.filter(function(d){return d.venue == "COLT"});
+        svg.append("path")
+        .datum(ft4)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#a242c2")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft4)
+        .enter().append("circle")
+        .attr("fill", "#a242c2")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft5 = data.filter(function(d){return d.venue == "CVPR"});
+        svg.append("path")
+        .datum(ft5)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#e3751b")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft5)
+        .enter().append("circle")
+        .attr("fill", "#e3751b")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft6 = data.filter(function(d){return d.venue == "ECCV"});
+        svg.selectAll(".dot2")
+        .data(ft6)
+        .enter().append("circle")
+        .attr("fill", "#8ddb2e")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft7 = data.filter(function(d){return d.venue == "EMNLP"});
+        svg.append("path")
+        .datum(ft7)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#16ccae")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft7)
+        .enter().append("circle")
+        .attr("fill", "#16ccae")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft8 = data.filter(function(d){return d.venue == "ICCV"});
+        svg.append("path")
+        .datum(ft8)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#cc1698")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft8)
+        .enter().append("circle")
+        .attr("fill", "#cc1698")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft9 = data.filter(function(d){return d.venue == "ICML"});
+        svg.append("path")
+        .datum(ft9)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#189629")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft9)
+        .enter().append("circle")
+        .attr("fill", "#189629")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft10 = data.filter(function(d){return d.venue == "NIPS"});
+        svg.append("path")
+        .datum(ft10)
+        .attr("class","line")
+        .attr("d",line)
+        .attr ("fill", "none")
+        .attr("stroke", "#9dd62b")
+        .attr("stroke-width",2);
+
+        svg.selectAll(".dot2")
+        .data(ft10)
+        .enter().append("circle")
+        .attr("fill", "#9dd62b")
+        .attr("cx", function (d) {
+            return xScale(d.year)
+        })
+        .attr("cy", function (d) {
+            return yScale(d.count)
+        })
+        .attr("r", 4);
+
+        var ft11 = data.filter(function(d){return d.venue == "WACV"});
+        svg.selectAll(".dot2")
+        .data(ft11)
+        .enter().append("circle")
+        .attr("fill", "#f07d9f")
         .attr("cx", function (d) {
             return xScale(d.year)
         })
@@ -128,6 +330,145 @@
             .attr("transform", "rotate(-90)")
             .attr("x", -220)
             .attr("y", -80)
+
+        //add legend
+        var legend = svg.append("g")
+            .attr("class", "legend");
+
+        var legendsymbol = d3.symbol().size(150);
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 60 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#FFC300")
+            
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 75 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#d63429");
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 90 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#499ee3");
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 105 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#a242c2");
+        
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 120 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#e3751b");
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 135 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#8ddb2e");
+        
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 150 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#16ccae");
+        
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 165 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#cc1698");
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 180 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#189629");
+        
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 195 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#9dd62b");
+
+        legend.append("path")
+            .attr("transform", function(d){
+                return "translate(" + (width) + "," + 210 + ")";})
+            .attr("d", legendsymbol.type(d3.symbolCircle))
+            .attr("fill", "#f07d9f");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 1.3)
+            .text("ACL")
+            .style("font-size", "15px");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 1.6)
+            .text("ACML")
+            .style("font-size", "15px");
+        
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 1.9)
+            .text("AISTATS")
+            .style("font-size", "15px");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 2.2)
+            .text("COLT")
+            .style("font-size", "15px");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 2.5)
+            .text("CVPR")
+            .style("font-size", "15px");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 2.8)
+            .text("ECCV")
+            .style("font-size", "15px");
+        
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 3.1)
+            .text("EMNLP")
+            .style("font-size", "15px");
+        
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 3.4)
+            .text("ICCV")
+            .style("font-size", "15px");
+
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 3.7)
+            .text("ICML")
+            .style("font-size", "15px");
+        
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 4)
+            .text("NIPS")
+            .style("font-size", "15px");
+        
+        legend.append("text")
+            .attr("x", width+10)
+            .attr("y", 50 * 4.3)
+            .text("WACV")
+            .style("font-size", "15px");
+
     }
 
 </script>
