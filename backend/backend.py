@@ -8,7 +8,6 @@ import urllib.error
 import urllib.request
 
 import nltk
-from spellchecker import SpellChecker
 from nltk.tokenize import word_tokenize
 from six.moves.html_parser import HTMLParser
 
@@ -545,18 +544,29 @@ class Author(object):
         return pprint.pformat(self.__dict__)
 
 
+# @app.route('/get_paper', methods=['GET'])
 def search_pubs_query(query):
     """Search by scholar query and return a generator of Publication objects"""
+    # query = requests.args.get('title').lower()
     url = _PUBSEARCH.format(requests.utils.quote(query))
     soup = _get_soup(_HOST+url)
     return _search_scholar_soup(soup)
 
 
-def search_author(name):
+@app.route('/get_author', methods=['GET'])
+def search_author():
     """Search by author name and return a generator of Author objects"""
+    name = request.args.get('name').lower()
     url = _AUTHSEARCH.format(requests.utils.quote(name))
     soup = _get_soup(_HOST+url)
-    return _search_citation_soup(soup)
+    # import pdb; pdb.set_trace()
+    author = next(_search_citation_soup(soup))
+    res = {}
+    res['gscholar_url'] = 'https://scholar.google.com/citations?user=' + author.id
+    res['gscholar_photo_url'] = author.url_picture
+    res['name'] = author.name
+    res['affiliation'] = author.affiliation
+    return jsonify(res)
 
 
 def search_keyword(keyword):
