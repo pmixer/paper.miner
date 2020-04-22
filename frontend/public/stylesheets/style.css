@@ -27,9 +27,16 @@ a {
   font: 11px sans-serif;
 }
 
-#hot_topics{
+#title2{
   font-family: sans-serif;
-  font-size: 24px;
+  font-size: 26px;
+  margin-left: 700px;
+  font-weight: bold
+}
+
+#title3{
+  font-family: sans-serif;
+  font-size: 26px;
   margin-left: 850px;
   font-weight: bold
 }

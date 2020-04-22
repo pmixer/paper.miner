@@ -28,6 +28,9 @@
 
 <div id="plot1"></div>
 
+<p id="title2">Number of Collaborators of Top 30 Researchers</p>
+<div id="plot2"></div>
+
 <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
 <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
@@ -48,9 +51,9 @@
     });
 
     function plot1(data) {
-        var margin = {top: 100, right: 650, bottom: 450, left: 480}
-        , width = window.innerWidth - margin.left - margin.right // Use the window's width 
-        , height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+        var margin = {top: 100, right: 550, bottom: 260, left: 480}
+        , width = 2000 - margin.left - margin.right // Use the window's width 
+        , height = 900 - margin.top - margin.bottom; // Use the window's height
 
         var startDate = d3.min(data, function(d) { return d.year; });
         var endDate = d3.max(data, function(d) { return d.year; });
@@ -311,7 +314,7 @@
             .text("Paper Statistics by Year")
             .style("text-anchor", "middle")
             .attr("font-family", "sans-serif")
-            .attr("font-size", "22px")
+            .attr("font-size", "26px")
             .attr("font-weight", "bold")
             .attr("x", width / 2)
             .attr("y", -20);
@@ -472,15 +475,91 @@
 
     }
 
+
+
+
+
+    /*-------------------------------------------------------------------*/
+    //plot2
+
+    d3.csv("top_researcher_collaborator.csv", function (d) {
+        return {
+            author: d.authors,
+            num: parseInt(d.number_of_coauthors)
+        };
+
+    }).then(function (data) {
+        plot2(data);
+    });
+
+    function plot2(data) {
+        var margin = {top: 150, right: 500, bottom: 200, left: 480}
+        , width = 2000 - margin.left - margin.right // Use the window's width 
+        , height = 1000 - margin.top - margin.bottom; // Use the window's height
+
+        // d3.select(this)
+        // .attr("r", 8);
+
+        var xbarscale = d3.scaleLinear()
+            .domain([0, d3.max(data, function (d) {
+                return d.num
+            })])
+            .range([0, width]);
+
+        var ybarscale = d3.scaleBand()
+            .domain(data.map(function (d) {
+                return d.author;
+            }))
+            .range([0, height]);
+
+        var svg2 = d3.select("#plot2").append("svg")
+            .attr("id", "barchart")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+
+        svg2.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", 420)
+            .attr("y", function (d) {
+                return ybarscale(d.author) + 3;
+            })
+            .attr("width", function (d) {
+                return xbarscale(d.num);
+            })
+            .attr("height", ybarscale.bandwidth() - 6)
+            .attr("fill", "#4287f5");
+
+        svg2.append("g")
+            .attr("transform", "translate(" + 420 + "," + height + ")")
+            .attr("class", "x axis")
+            .style("font-size", "18px")
+            .call(d3.axisBottom(xbarscale));
+
+        svg2.append("g")
+            .attr("transform", "translate(" + 420 + "," + 0 + ")")
+            .attr("class", "y axis")
+            .style("font-size", "18px")
+            .call(d3.axisLeft(ybarscale));
+        
+
+    }
+
 </script>
 
-<p id="hot_topics">Hot Topics</p>
+
+
+
+
+
+<p id="title3">Hot Topics</p>
 <script type="text/javascript">
 
-    /*-------------------------------------------*/
+    /*--------------------------------------------------------------------*/
     //word cloud
     function wordCloud(selector) {
-        var margin = {top: 250, right: 0, bottom: 450, left: 880}
+        var margin = {top: 400, right: 0, bottom: 150, left: 880}
         , width = window.innerWidth - margin.left - margin.right // Use the window's width 
         , height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
         var fill = d3.scaleOrdinal(d3.schemeCategory10);
@@ -514,7 +593,7 @@
             //Entering and existing words
             cloud
                 .transition()
-                    .duration(3000)
+                    .duration(1000)
                     .style("font-size", function(d) { return d.size + "px"; })
                     .attr("transform", function(d) {
                         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
@@ -524,7 +603,7 @@
             //Exiting words
             cloud.exit()
                 .transition()
-                    .duration(5000)
+                    .duration(3000)
                     .style('fill-opacity', 1e-6)
                     .attr('font-size', 1)
                     .remove();
@@ -540,7 +619,7 @@
             //The outside world will need to call this function, so make it part
             // of the wordCloud return value.
             update: function(words) {
-                d3.layout.cloud().size([500, 500])
+                d3.layout.cloud().size([800, 800])
                     .words(words)
                     .padding(5)
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
@@ -575,7 +654,7 @@
 
             .split(',')
             .map(function(d) {
-                return {text: d, size: 10 + Math.random() * 80};
+                return {text: d, size: 20 + Math.random() * 70};
             })
     }
 
@@ -586,7 +665,7 @@
         i = i || 0;
 
         vis.update(getWords(i ++ % words.length))
-        setTimeout(function() { showNewWords(vis, i + 1)}, 5000)
+        setTimeout(function() { showNewWords(vis, i + 1)}, 3000)
     }
 
     //Create a new instance of the word cloud visualisation.
