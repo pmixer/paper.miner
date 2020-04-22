@@ -30,6 +30,7 @@
 
 <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+<script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
 
 <script type="text/javascript">
     var parseTime = d3.timeParse("%Y");
@@ -72,8 +73,6 @@
         .curve(d3.curveMonotoneX)
 
         
-
-
         
         var svg = d3.select("#plot1").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -469,7 +468,132 @@
             .text("WACV")
             .style("font-size", "15px");
 
+       
+
     }
+
+</script>
+
+<p id="hot_topics">Hot Topics</p>
+<script type="text/javascript">
+
+    /*-------------------------------------------*/
+    //word cloud
+    function wordCloud(selector) {
+        var margin = {top: 250, right: 0, bottom: 450, left: 880}
+        , width = window.innerWidth - margin.left - margin.right // Use the window's width 
+        , height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
+        var fill = d3.scaleOrdinal(d3.schemeCategory10);
+        
+
+        //Construct the word cloud's SVG element
+        var svg = d3.select(selector).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        
+
+        
+        //Draw the word cloud
+        function draw(words) {
+
+            var cloud = svg.selectAll("g text")
+                            .data(words, function(d) { return d.text; })
+
+            //Entering words
+            cloud.enter()
+                .append("text")
+                .style("font-family", "Impact")
+                .style("fill", function(d, i) { return fill(i); })
+                .attr("text-anchor", "middle")
+                .attr('font-size', 1)
+                .text(function(d) { return d.text; });
+
+            //Entering and existing words
+            cloud
+                .transition()
+                    .duration(3000)
+                    .style("font-size", function(d) { return d.size + "px"; })
+                    .attr("transform", function(d) {
+                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                    })
+                    .style("fill-opacity", 1);
+
+            //Exiting words
+            cloud.exit()
+                .transition()
+                    .duration(5000)
+                    .style('fill-opacity', 1e-6)
+                    .attr('font-size', 1)
+                    .remove();
+        }
+
+
+        //Use the module pattern to encapsulate the visualisation code. We'll
+        // expose only the parts that need to be public.
+        return {
+
+            //Recompute the word cloud for a new set of words. This method will
+            // asycnhronously call draw when the layout has been computed.
+            //The outside world will need to call this function, so make it part
+            // of the wordCloud return value.
+            update: function(words) {
+                d3.layout.cloud().size([500, 500])
+                    .words(words)
+                    .padding(5)
+                    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+                    .font("Impact")
+                    .fontSize(function(d) { return d.size ; })
+                    .on("end", draw)
+                    .start();
+            }
+        }
+
+    }
+
+    //Some sample data - http://en.wikiquote.org/wiki/Opening_lines
+    var words = [
+    "task,state art,sentence,model,information,dataset,word,text,method,word,relation,performance,approach,training,language,context,framework,system,machine learning",
+    "information,text,feature,algorithm,method,sentence,document,different,model,task,data,dataset,representation,embedding,architecture,problem,semantic,machine,learning",
+    "data,framework,show,model,based,method,algorithm,neural network, embedding,classification,text,distribution,graph,variable,image,feature,experimental result,single",
+    "data,approach,show,word,model,algorithm,method,problem,dataset,information,setting,function,using,framework,performance,result,paper,distribution,structure,text,term",
+    "model,image,algorithm,based,problem,representation,semantic,text,graph,information,dataset,show,framework,parameter,domain,architecture,modeling,technique,video",
+    "model,algorithm,image,imput,learn,motion,training,data,proposed,framework,video,system,neural network,information,network,object,structure,method,constraint,task",
+    "algorithm,neural network,experimental result,image,using,sentence,problem,information,model,object,video,dataset,task,structure,feature,based,distribution,classifier,output",
+    "information,neural network,based,experimental result,training,use,using,paper,convolutional neural,feature,different,representation,multiple,extensive experiment,text",
+    "image,function,system,structure,large scale,model,neural network,show,training,example,computer vision,task,video,representation,convolutional,method,context,technique",
+    "machine learning,classifier,real world,feature,parameter,distribution,using,object,learn,representation,algorithm,information,domain,find,task,structure,input,case,robust",
+    "inout,neural network,prediction,provide,image,machine learning,modeling,system,graph,feature,data,domain,using,setting,parameter,show,model,example,large scale,different"
+    ]
+
+    //Prepare one of the sample sentences by removing punctuation,
+    // creating an array of words and computing a random size attribute.
+    function getWords(i) {
+        return words[i]
+
+            .split(',')
+            .map(function(d) {
+                return {text: d, size: 10 + Math.random() * 80};
+            })
+    }
+
+    //This method tells the word cloud to redraw with a new set of words.
+    //In reality the new words would probably come from a server request,
+    // user input or some other source.
+    function showNewWords(vis, i) {
+        i = i || 0;
+
+        vis.update(getWords(i ++ % words.length))
+        setTimeout(function() { showNewWords(vis, i + 1)}, 5000)
+    }
+
+    //Create a new instance of the word cloud visualisation.
+    var myWordCloud = wordCloud('body');
+
+    //Start cycling through the demo data
+    showNewWords(myWordCloud);
 
 </script>
 
