@@ -26,3 +26,10 @@ a {
   padding: 4px;
   font: 11px sans-serif;
 }
+
+#hot_topics{
+  font-family: sans-serif;
+  font-size: 24px;
+  margin-left: 850px;
+  font-weight: bold
+}
