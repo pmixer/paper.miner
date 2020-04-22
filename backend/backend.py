@@ -272,6 +272,7 @@ def get_paper_data(txt, keyword, num_to_show):
     return res
 
 @app.route('/get_papers', methods=['GET'])
+@crossdomain(origin='*')
 def get_papers():
     keyword = request.args.get('keyword').lower()
     num_to_show = int(request.args.get('num_to_show'))
