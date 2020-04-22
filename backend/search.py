@@ -53,17 +53,16 @@ def get_next_result(lines, start):
     Extract paper from the xml file obtained from arxiv search.
     Each paper is a dict that contains:
     + 'title': str
-    + 'pdf_link': str
-    + 'main_page': str
+    + 'page': str
+    + 'date': str
     + 'authors': []
     + 'abstract': str
     """
 
     result = {}
-    idx = lines[start + 3][10:].find('"')
-    result['main_page'] = lines[start + 3][9:10 + idx]
-    idx = lines[start + 4][23:].find('"')
-    result['pdf'] = lines[start + 4][22: 23 + idx] + '.pdf'
+    l = lines[start + 2]
+    l = l[l.find("<a"):]
+    result['url'] = l[l.find('https'): l.find('">')]
 
     start += 4
 
@@ -231,7 +230,6 @@ def get_papers():
 
     txt = response.read()
     paper_data = get_paper_data(txt, keyword, num_to_show)
-
     return jsonify(paper_data)
 
 # modified based on scholarly
