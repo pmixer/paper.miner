@@ -3,19 +3,26 @@
 import os
 import re
 import sys
+import warnings
 import urllib.error
 import urllib.request
-import warnings
 
 import nltk
+from spellchecker import SpellChecker
 from nltk.tokenize import word_tokenize
 from six.moves.html_parser import HTMLParser
-from spellchecker import SpellChecker
+
+from flask import Flask
+from flask import jsonify
+from flask import request
+import json
 
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
     nltk.download('punkt')
+
+app = Flask(__name__)
 
 # modified based on sotawhat
 
@@ -184,24 +191,12 @@ def extract_line(abstract, keyword, limit):
     return '. '.join(lines[-2:]), False
 
 
-def get_report(paper, keyword):
-    if keyword in paper['abstract'].lower():
-        title = h.unescape(paper['title'])
-        headline = '{} ({} - {})\n'.format(title, paper['authors'][0], paper['date'])
-        abstract = h.unescape(paper['abstract'])
-        extract, has_number = extract_line(abstract, keyword, 280 - len(headline))
-        if extract:
-            report = headline + extract + '\nLink: {}'.format(paper['main_page'])
-            return report, has_number
-    return '', False
-
-
-def txt2reports(txt, keyword, num_to_show):
+def get_paper_data(txt, keyword, num_to_show):
     found = False
     txt = ''.join(chr(c) for c in txt)
     lines = txt.split('\n')
     lines = clean_empty_lines(lines)
-    unshown = []
+    res = []
 
     for i in range(len(lines)):
         if num_to_show <= 0:
@@ -213,67 +208,31 @@ def txt2reports(txt, keyword, num_to_show):
         if line == '<li class="arxiv-result">':
             found = True
             paper, i = get_next_result(lines, i)
-            report, has_number = get_report(paper, keyword)
+            res.append(paper)
 
-            if has_number:
-                print(report)
-                print('====================================================')
-                num_to_show -= 1
-            elif report:
-                unshown.append(report)
         if line == '</ol>':
             break
-    return unshown, num_to_show, found
+    return res
 
+@app.route('/get_papers', methods=['GET'])
+def get_papers():
+    keyword = request.args.get('keyword').lower()
+    num_to_show = int(request.args.get('num_to_show'))
 
-def get_papers(keyword, num_results=5):
-    """
-    If keyword is an English word, then search in CS category only to avoid papers from other categories, resulted from the ambiguity
-    """
+    query_temp = 'https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={}&terms-0-field=all&classification-computer_science=y&classification-physics_archives=all&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size={}&order=-announced_date_first&start={}'
+    query = query_temp.format(keyword, '100', '0') # query, per_page and starting idx
 
-    if keyword in set(['GAN', 'bpc']):
-        query_temp = 'https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={}&terms-0-field=all&classification-computer_science=y&classification-physics_archives=all&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size={}&order=-announced_date_first&start={}'
-        keyword = keyword.lower()
-    else:
-        keyword = keyword.lower()
-        words = keyword.split()
-        d = SpellChecker()
-        if not d.unknown(words):
-            query_temp = 'https://arxiv.org/search/advanced?advanced=&terms-0-operator=AND&terms-0-term={}&terms-0-field=all&classification-computer_science=y&classification-physics_archives=all&date-filter_by=all_dates&date-year=&date-from_date=&date-to_date=&date-date_type=submitted_date&abstracts=show&size={}&order=-announced_date_first&start={}'
-        else:
-            query_temp = 'https://arxiv.org/search/?searchtype=all&query={}&abstracts=show&size={}&order=-announced_date_first&start={}'
-    keyword_q = keyword.replace(' ', '+')
-    page = 0
-    per_page = 200
-    num_to_show = num_results
-    all_unshown = []
+    req = urllib.request.Request(query)
+    try:
+        response = urllib.request.urlopen(req)
+    except urllib.error.HTTPError as e:
+        print('Error {}: problem accessing the server'.format(e.code))
+        return
 
-    while num_to_show > 0:
-        query = query_temp.format(keyword_q, str(per_page), str(per_page * page))
+    txt = response.read()
+    paper_data = get_paper_data(txt, keyword, num_to_show)
 
-        req = urllib.request.Request(query)
-        try:
-            response = urllib.request.urlopen(req)
-        except urllib.error.HTTPError as e:
-            print('Error {}: problem accessing the server'.format(e.code))
-            return
-
-        txt = response.read()
-        unshown, num_to_show, found = txt2reports(txt, keyword, num_to_show)
-        if not found and not all_unshown and num_to_show == num_results:
-            print('Sorry, we were unable to find any abstract with the word {}'.format(keyword))
-            return
-
-        if num_to_show < num_results / 2 or not found:
-            for report in all_unshown[:num_to_show]:
-                print(report)
-                print('====================================================')
-            if not found:
-                return
-            num_to_show -= len(all_unshown)
-        else:
-            all_unshown.extend(unshown)
-        page += 1
+    return jsonify(paper_data)
 
 # modified based on scholarly
 from bs4 import BeautifulSoup
@@ -621,3 +580,6 @@ def search_author_custom_url(url):
     URL should be of the form '/citation?q=...'"""
     soup = _get_soup(_HOST+url)
     return _search_citation_soup(soup)
+
+if __name__ == '__main__':
+    app.run()
