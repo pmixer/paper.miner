@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+
+<h2>The Author Name</h2>
+
+<form id="idForm" action="http://127.0.0.1:5000/get_author" method="GET">
+  <label for="name">name:</label><br>
+  <input type="text" id="name" name="name" value="John" required><br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<script>
+
+    jQuery.support.cors = true;
+    $("#idForm").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: form.serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            // TODO, render the page instead of just alert
+            var ret = data.name + " " + data.affiliation;
+            alert(ret); // show response from the php script.
+        }
+        });
+});
+</script>
+
+</body>
+</html>

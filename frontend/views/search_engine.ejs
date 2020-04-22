@@ -25,24 +25,25 @@
 
 <br>
 
-
-<div class="input-group mb-3">
-  <a class="nav-link logo" href="/"><h1>PaperMiner</h1></a>
-  <input type="text" style="margin-left: 20px; height: 58px" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
-  <div class="input-group-append" style="margin-right: 130px">
-    <button class="btn btn-outline-secondary" type="button" id="button-addon2">search</button>
-    
+<form name = "search" method = "post">
+  <div class="input-group mb-3">
+    <a class="nav-link logo" href="/"><h1>PaperMiner</h1></a>
+    <input type="text" name = "search_content" style="margin-left: 20px; height: 58px" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
+    <div class="input-group-append" style="margin-right: 130px">
+      <button class="btn btn-outline-secondary" type="submit" id="button-addon2">search</button>
+      
+    </div>
+    <label style="font-size: 26px; padding-top: 7px">Limit:</label>
+    <div class="input-group-append" style="margin-left: 8px; margin-right: 100px">
+        <select name="limit" class="bootstrap-select">
+            <option value="10" selected="selected">10 pages</option>
+            <option value="20">20 pages</option>
+            <option value="50">50 pages</option>
+            <option value="100">100 pages</option>
+          </select>
+    </div>
   </div>
-  <label style="font-size: 26px; padding-top: 7px">Limit:</label>
-  <div class="input-group-append" style="margin-left: 8px; margin-right: 100px">
-      <select class="bootstrap-select">
-          <option value="10" selected="selected">10 pages</option>
-          <option value="20">20 pages</option>
-          <option value="50">50 pages</option>
-          <option value="100">100 pages</option>
-        </select>
-  </div>
-</div>
+</form>
 <br>
 <br>
 <div class="list-group">
