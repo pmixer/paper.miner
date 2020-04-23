@@ -11,6 +11,10 @@ import nltk
 from nltk.tokenize import word_tokenize
 from six.moves.html_parser import HTMLParser
 
+import pandas as pd
+from gensim.models.doc2vec import Doc2Vec
+
+
 from flask import Flask
 from flask import jsonify
 from flask import request
@@ -628,6 +632,37 @@ def search_author():
     res['name'] = author.name
     res['affiliation'] = author.affiliation
     return jsonify(res)
+
+
+@app.route('/abstract_search',methods = ['GET'])
+def search_abstract(path="", top =10):
+    """Search the most similary abstract based on inpit query"""
+
+    # path: path of training model
+    # query: input scentence
+    # top: # of return
+
+    df = pd.read_csv('papers_with_abstract.csv', header="infer", sep=',', encoding='iso-8859-1')
+    df.drop(df[df.isnull().any(axis=1)].index, inplace=True)
+
+    # get the input query and num_to_show DEFULT:10
+    query = request.args.get("query")
+    top = int(request.args.get("num_to_show"))
+
+    strl_tok = word_tokenize(query)
+
+    # Load the Doc2Vec model
+    model = Doc2Vec.load(path+"my_model")
+    inferred_vector = model.infer_vector(doc_words=strl_tok, alpha=0.05, steps=500)
+    sims = model.docvecs.most_similar([inferred_vector], topn=top)
+
+    result = []
+    for count, sim in sims:
+        result.append(count)
+
+    resultdf = df.loc[result,:]
+    resultdict = resultdf.to_dict('records')
+    return jsonify(resultdict)
 
 
 def search_keyword(keyword):
