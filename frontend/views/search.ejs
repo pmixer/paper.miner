@@ -77,8 +77,9 @@
             len = data.length;
             var ret = data[0].date;
             //alert(len); // show response from the php script.
-
+            $("#list").empty();
             $.each(data, function (index, d) {
+                
                 $("#list").append(
                     '<a href="' + d.url + '" class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between"><h3 class="mb-3" style="color:rgb(67, 126, 236)">' + d.title + '</h3><small class="text-muted">' + d.date + '</small></div><p class="mb-2" style="font-size: 22px; font-style: italic">' + d.authors + '</p><p class="mb-2" style="font-size: 22px">' + d.abstract + '</p></a>'
                 );
