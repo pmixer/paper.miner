@@ -635,6 +635,7 @@ def search_author():
 
 
 @app.route('/abstract_search',methods = ['GET'])
+@crossdomain(origin='*')
 def search_abstract(path="", top =10):
     """Search the most similary abstract based on inpit query"""
 
