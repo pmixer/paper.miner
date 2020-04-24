@@ -37,8 +37,8 @@
     <label style="font-size: 26px; padding-top: 7px">Limit:</label>
     <div class="input-group-append" style="margin-left: 8px; margin-right: 100px">
         <select id="num_to_show" name="num_to_show" class="bootstrap-select">
-            <option value="5">5 pages</option>
-            <option value="10" selected="selected">10 pages</option>
+            <option value="5" selected="selected">5 pages</option>
+            <option value="10">10 pages</option>
             <option value="20">20 pages</option>
             </select>
     </div>
@@ -46,6 +46,9 @@
 </form>
 
 <% var len = 10 %>
+<% var authorList = []%>
+
+<% var venueList = [] %>
 
 <script>
 
@@ -67,30 +70,54 @@
             console.log(data);
             len = data.length;
             var ret = data[0].date;
-            alert(len); // show response from the php script.
-            $("#list").empty();
+            //alert(len); // show response from the php script.
+            $("#list1").empty();
+            $("#list1").append('<a class="list-group-item list-group-item-primary" style="font-weight: bold">Recommended articles</a>');
+            $("#list2").empty();
+            $("#list2").append('<li class="list-group-item list-group-item-danger" style="font-weight: bold">Recommended authors</li>');
+            $("#list3").empty();
+            $("#list3").append('<li class="list-group-item list-group-item-warning" style="font-weight: bold">Recommended conferences</li>');
+
+            
             $.each(data, function (index, d) {
                 
                 $("#list1").append(
-                    '<a href="'+ d.url +'" class="list-group-item">' + d.title + '</a>'
-                );
-                $("#list2").append(
-                    '<li href="'+ d.url +'" class="list-group-item">' + d.authors + '</li>'
-                );
-                $("#list3").append(
-                    '<li href="'+ d.url +'" class="list-group-item">' + d.venue + '</li>'
+                    '<a href="'+ d.url +'" class="list-group-item">' + d.title.split("_").join(" ") + '</a>'
                 );
 
+                authorList = d.authors.split('|');
+                //console.log(authorList);
+                for(var i = 0; i < authorList.length; i++) {
+                    $("#list2").append(
+                        '<li href="'+ d.url +'" class="list-group-item">' + authorList[i] + '</li>'
+                    );
+                }
+                authorList = [];
+
             })
+            $.each(data, function (index, d) {
+                if(! authorList.includes(d.venue)) authorList.push(d.venue);
+                console.log(authorList)
+                
+            });
+            
+            for(var i = 0; i < authorList.length; i++) {
+                
+                $("#list3").append(
+                    '<li class="list-group-item">' + authorList[i] + '</li>'
+                );
+            }
+
+
         }
-        });
+    });
 });
 </script>
 
 <div class="row">
     <div class="col-xl">
         <ul id = "list1" class="list-group">
-            <a class="list-group-item list-group-item-primary" style="font-weight: bold">Recommended articles</a>
+
             
         </ul>
     </div>
@@ -100,21 +127,19 @@
 <div class="row">
     <div class="col-lg">
         <ul id = "list2" class="list-group">
-            <li class="list-group-item list-group-item-danger" style="font-weight: bold">Recommended authors</li>
+            
 
         </ul>
     </div>
     <div class="col-lg">
         <ul id = "list3" class="list-group">
-            <li class="list-group-item list-group-item-warning" style="font-weight: bold">Recommended conferences</li>
+            
 
         </ul>
     </div>
     
     
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
