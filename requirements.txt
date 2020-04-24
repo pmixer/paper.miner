@@ -7,3 +7,5 @@ nltk
 six
 flask
 pandas
+gensim
+scikit-learn
