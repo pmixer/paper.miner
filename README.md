@@ -34,3 +34,7 @@ We used `Node.js` for web development, mainly for frontend part of the project, 
 ## Usage
 
 Pls install the dependencies first(sorry for the workload), then start the backend/frontend service according to instructions in READMEs. Then test APIs by sending GET requests to port 5000 and enjoy our search/trends/explore services by visiting the website `http://localhost:3000` using your browser with internet access.
+
+1. pls search your interested paper by inputing keywords in our search page.
+2. pls enjoy the data visualizations presented in our trends page for know statistics about conferences and researchers.
+3. pls get paper/researcher/conference recommendations by inputing your paper abstract in our explore page.
