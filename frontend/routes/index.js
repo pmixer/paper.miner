@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 // GET request for rendering a search engine 
 router.get('/search', search_controller.search);
 
-router.post('/search', search_controller.search_post);
+//router.post('/search', search_controller.search_post);
 
 // GET request for rendering the trends page
 router.get('/trends', trends_controller.trends);
