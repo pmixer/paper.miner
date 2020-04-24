@@ -1,1 +1,3 @@
-Stuff like paper crawler and samples to show how to use Flask etc.
+paper crawler, customized based on [Ben's NIPS crawler](https://github.com/benhamner/nips-papers).
+
+`cd` to each subfolder and `make` to start crawling.

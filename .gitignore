@@ -2,3 +2,6 @@ __pycache__/
 .DS_Store
 working/
 output/
+my_model
+*.csv
+*.npy
