@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
@@ -25,26 +26,72 @@
 </ul>
 
 <br>
-<form name = "search" method = "post">
+<form id="idForm" action="http://127.0.0.1:5000/abstract_search" method="GET">
     <div class="input-group mb-3">
-        <a class="nav-link logo" href="/"><h1>PaperMiner</h1></a>
-        <input type="text" style="margin-left: 20px; height: 58px" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
-        <div class="input-group-append" style="margin-right: 130px">
+    <a class="nav-link logo" href="/"><h1>PaperMiner</h1></a>
+    <input type="text" id="query" name = "query" style="margin-left: 20px; height: 58px" class="form-control" placeholder="Search..." aria-label="Recipient's username" aria-describedby="button-addon2">
+    <div class="input-group-append" style="margin-right: 130px">
         <button class="btn btn-outline-secondary" type="submit" id="button-addon2">search</button>
         
-        </div>
+    </div>
+    <label style="font-size: 26px; padding-top: 7px">Limit:</label>
+    <div class="input-group-append" style="margin-left: 8px; margin-right: 100px">
+        <select id="num_to_show" name="num_to_show" class="bootstrap-select">
+            <option value="5">5 pages</option>
+            <option value="10" selected="selected">10 pages</option>
+            <option value="20">20 pages</option>
+            </select>
+    </div>
     </div>
 </form>
-<br>
+
+<% var len = 10 %>
+
+<script>
+
+    jQuery.support.cors = true;
+    $("#idForm").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var form = $(this);
+    var url = form.attr('action');
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: form.serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            // TODO, render the page instead of just alert
+            console.log(data);
+            len = data.length;
+            var ret = data[0].date;
+            alert(len); // show response from the php script.
+            $("#list").empty();
+            $.each(data, function (index, d) {
+                
+                $("#list1").append(
+                    '<a href="'+ d.url +'" class="list-group-item">' + d.title + '</a>'
+                );
+                $("#list2").append(
+                    '<li href="'+ d.url +'" class="list-group-item">' + d.authors + '</li>'
+                );
+                $("#list3").append(
+                    '<li href="'+ d.url +'" class="list-group-item">' + d.venue + '</li>'
+                );
+
+            })
+        }
+        });
+});
+</script>
 
 <div class="row">
     <div class="col-xl">
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-primary" style="font-weight: bold">Recommended articles</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+        <ul id = "list1" class="list-group">
+            <a class="list-group-item list-group-item-primary" style="font-weight: bold">Recommended articles</a>
+            
         </ul>
     </div>
 </div>
@@ -52,25 +99,15 @@
 <br>
 <div class="row">
     <div class="col-lg">
-        <ul class="list-group">
+        <ul id = "list2" class="list-group">
             <li class="list-group-item list-group-item-danger" style="font-weight: bold">Recommended authors</li>
 
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
         </ul>
     </div>
     <div class="col-lg">
-        <ul class="list-group">
+        <ul id = "list3" class="list-group">
             <li class="list-group-item list-group-item-warning" style="font-weight: bold">Recommended conferences</li>
 
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
         </ul>
     </div>
     
@@ -78,7 +115,7 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
