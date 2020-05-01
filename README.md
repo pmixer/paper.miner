@@ -1,4 +1,5 @@
 # PaperMiner
+> Authors: Zan Huang, Kaiwen Luo, Jiaji Liu, Kai Li, Maiqi Ding
 
 ## Overview
 PaperMiner is a novel computer science literature search platform for college students. It combines literature search, academic data presentation, interactive visualization, and open-source API for your research.
